@@ -21,7 +21,6 @@
                     USER_DATA = {
                         email: 'xsy@edx.org',
                         password: 'xsyisawesome',
-                        remember: true
                     },
                     THIRD_PARTY_AUTH = {
                         currentProvider: null,
