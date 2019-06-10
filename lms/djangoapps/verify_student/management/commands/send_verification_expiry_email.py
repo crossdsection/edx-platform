@@ -81,6 +81,7 @@ class Command(BaseCommand):
         It creates batches of expired Software Secure Photo Verification and sends it to send_verification_expiry_email
         that used edx_ace to send email to these learners
         """
+        # pylint: disable=attribute-defined-outside-init
         self.resend_days = settings.VERIFICATION_EXPIRY_EMAIL['RESEND_DAYS']
         days = settings.VERIFICATION_EXPIRY_EMAIL['DAYS_RANGE']
         batch_size = options['batch_size']
@@ -173,7 +174,7 @@ class Command(BaseCommand):
         send_expiry_email_again = True
         no_of_emails_sent = (now() - verification.expiry_date).days / self.resend_days
 
-        if not (no_of_emails_sent < settings.VERIFICATION_EXPIRY_EMAIL['DEFAULT_EMAILS']):
+        if not no_of_emails_sent < settings.VERIFICATION_EXPIRY_EMAIL['DEFAULT_EMAILS']:
             send_expiry_email_again = False
 
             enrollments = CourseEnrollment.enrollments_for_user(user=user)
