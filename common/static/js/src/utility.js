@@ -37,3 +37,17 @@ window.rewriteStaticLinks = function(content, from, to) {
     var regex = new RegExp('(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}([-a-zA-Z0-9@:%_\+.~#?&//=]*))?' + fromRe, 'g');
     return content.replace(regex, replacer);
 };
+
+window.rewriteCdnLinksToStatic = function(content) {
+    var to = 'static'
+    if (to === null) {
+        return content;
+    }
+    // replace only relative urls
+    function replacer(match) {
+        return to;
+    }
+
+    var regex = new RegExp('\/prod\-edxapp\.edx\-cdn\.org\/assets\/courseware\/v1\/[a-z-0-9]*\/[a-z-0-9]*:[a-zA-Z-0-9.+_@]*', 'g');
+    return content.replace(regex, replacer);
+};
