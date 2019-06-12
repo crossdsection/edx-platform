@@ -2041,12 +2041,8 @@ def update_expiry_email_date(sender, instance, **kwargs):  # pylint: disable=unu
     verification then send email to get the ID verified by setting the
     expiry_email_date field.
     """
-    if hasattr(settings, 'VERIFICATION_EXPIRY_EMAIL'):
-        resend_days = settings.VERIFICATION_EXPIRY_EMAIL['RESEND_DAYS']
-        delta_days = settings.VERIFICATION_EXPIRY_EMAIL['DAYS_RANGE']
-    else:
-        resend_days = 15
-        delta_days = 1
+    resend_days = settings.VERIFICATION_EXPIRY_EMAIL['RESEND_DAYS']
+    delta_days = settings.VERIFICATION_EXPIRY_EMAIL['DAYS_RANGE']
 
     if instance.mode == 'verified':
         today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)

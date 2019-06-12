@@ -871,6 +871,13 @@ STATICFILES_IGNORE_PATTERNS = (
     "common_static",
 )
 
+################# Student Verification Expiry Email #################
+VERIFICATION_EXPIRY_EMAIL = {
+    "RESEND_DAYS": 15,
+    "DAYS_RANGE": 1,
+    "DEFAULT_EMAILS": 2,
+}
+
 ################################# DJANGO-REQUIRE ###############################
 
 
