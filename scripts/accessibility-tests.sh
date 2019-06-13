@@ -22,6 +22,8 @@ source scripts/jenkins-common.sh
 # with tox env invocation
 if [ -z ${TOX_ENV+x} ] || [[ ${TOX_ENV} == 'null' ]]; then
     TOX=""
+    # Make sure we have the latest paver requirements installed
+    pip install -qr requirements/edx/paver.txt
 elif tox -l |grep -q "${TOX_ENV}"; then
     TOX="tox -r -e ${TOX_ENV} --"
 else

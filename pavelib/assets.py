@@ -22,7 +22,7 @@ from openedx.core.djangoapps.theming.paver_helpers import get_theme_paths
 
 from .utils.cmd import cmd, django_cmd
 from .utils.envs import Env
-from .utils.process import run_background_process
+from .utils.process import rename_process, run_background_process
 from .utils.timer import timed
 
 # setup baseline paths
@@ -422,6 +422,7 @@ def compile_sass(options):
         '/edx/app/edxapp/edx-platform/themes' and '/edx/app/edxapp/edx-platform/common/test/'.
 
     """
+    rename_process()
     debug = options.get('debug')
     force = options.get('force')
     systems = get_parsed_option(options, 'system', ALL_SYSTEMS)
@@ -655,6 +656,7 @@ def process_xmodule_assets():
     """
     Process XModule static assets.
     """
+    rename_process()
     sh('xmodule_assets common/static/xmodule')
     print("\t\tFinished processing xmodule assets.")
 
@@ -761,6 +763,7 @@ def webpack(options):
     """
     Run a Webpack build.
     """
+    rename_process()
     settings = getattr(options, 'settings', Env.DEVSTACK_SETTINGS)
     static_root_lms = Env.get_django_setting("STATIC_ROOT", "lms", settings=settings)
     static_root_cms = Env.get_django_setting("STATIC_ROOT", "cms", settings=settings)
@@ -843,6 +846,7 @@ def watch_assets(options):
     """
     Watch for changes to asset files, and regenerate js/css
     """
+    rename_process()
     # Don't watch assets when performing a dry run
     if tasks.environment.dry_run:
         return
@@ -895,6 +899,7 @@ def update_assets(args):
     """
     Compile Sass, then collect static assets.
     """
+    rename_process()
     parser = argparse.ArgumentParser(prog='paver update_assets')
     parser.add_argument(
         'system', type=str, nargs='*', default=ALL_SYSTEMS,

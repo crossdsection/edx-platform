@@ -6,6 +6,7 @@ import sys
 from paver.easy import cmdopts, needs, task
 
 from pavelib.utils.envs import Env
+from pavelib.utils.process import rename_process
 from pavelib.utils.test.suites import JsTestSuite, JestSnapshotTestSuite
 from pavelib.utils.timer import timed
 
@@ -31,6 +32,7 @@ def test_js(options):
     """
     Run the JavaScript tests
     """
+    rename_process()
     mode = getattr(options, 'mode', 'run')
     port = None
     skip_clean = getattr(options, 'skip_clean', False)

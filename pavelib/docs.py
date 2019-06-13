@@ -8,6 +8,7 @@ import sys
 
 from paver.easy import cmdopts, needs, sh, task
 
+from .utils.process import rename_process
 from .utils.timer import timed
 
 DOC_PATHS = {
@@ -71,6 +72,7 @@ def build_docs(options):
     """
     Invoke sphinx 'make build' to generate docs.
     """
+    rename_process()
     verbose = getattr(options, 'verbose', False)
 
     cmd = u"cd {dir}; make html quiet={quiet}".format(

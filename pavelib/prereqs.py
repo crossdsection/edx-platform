@@ -14,6 +14,7 @@ from distutils import sysconfig
 from paver.easy import BuildFailure, sh, task
 
 from .utils.envs import Env
+from .utils.process import rename_process
 from .utils.timer import timed
 
 PREREQS_STATE_DIR = os.getenv('PREREQ_CACHE_DIR', Env.REPO_ROOT / '.prereqs_cache')
@@ -182,6 +183,7 @@ def install_node_prereqs():
     """
     Installs Node prerequisites
     """
+    rename_process()
     if no_prereq_install():
         print(NO_PREREQ_MESSAGE)
         return
@@ -215,7 +217,7 @@ def uninstall_python_packages():
     ways that were resistant to being upgraded, like edxval.  Also uninstall
     them.
     """
-
+    rename_process()
     if no_python_uninstall():
         print(NO_PYTHON_UNINSTALL_MESSAGE)
         return
@@ -280,6 +282,7 @@ def package_in_frozen(package_name, frozen_output):
 @timed
 def install_coverage_prereqs():
     """ Install python prereqs for measuring coverage. """
+    rename_process()
     if no_prereq_install():
         print(NO_PREREQ_MESSAGE)
         return
@@ -292,6 +295,7 @@ def install_python_prereqs():
     """
     Installs Python prerequisites.
     """
+    rename_process()
     if no_prereq_install():
         print(NO_PREREQ_MESSAGE)
         return
@@ -326,6 +330,7 @@ def install_prereqs():
     """
     Installs Node and Python prerequisites
     """
+    rename_process()
     if no_prereq_install():
         print(NO_PREREQ_MESSAGE)
         return

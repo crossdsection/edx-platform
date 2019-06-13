@@ -10,6 +10,7 @@ from paver.easy import cmdopts, needs, sh, task
 
 from pavelib.utils.envs import Env
 from pavelib.utils.passthrough_opts import PassthroughTask
+from pavelib.utils.process import rename_process
 from pavelib.utils.test.bokchoy_options import (
     BOKCHOY_OPTS,
 )
@@ -44,6 +45,7 @@ def test_bokchoy(options, passthrough_options):
     - path/to/test.py:TestFoo.test_bar
     It can also be left blank to run all tests in the suite.
     """
+    rename_process()
     # Note: Bok Choy uses firefox if SELENIUM_BROWSER is not set. So we are using
     # firefox as the default here.
     using_firefox = (os.environ.get('SELENIUM_BROWSER', 'firefox') == 'firefox')
@@ -76,6 +78,7 @@ def test_a11y(options, passthrough_options):
     It can also be left blank to run all tests in the suite that are tagged
     with `@attr("a11y")`.
     """
+    rename_process()
     # Modify the options object directly, so that any subsequently called tasks
     # that share with this task get the modified options
     options.test_a11y.report_dir = Env.BOK_CHOY_A11Y_REPORT_DIR
@@ -92,6 +95,7 @@ def perf_report_bokchoy(options, passthrough_options):
     """
     Generates a har file for with page performance info.
     """
+    rename_process()
     # Modify the options object directly, so that any subsequently called tasks
     # that share with this task get the modified options
     options.perf_report_bokchoy.test_dir = 'performance'
@@ -139,6 +143,7 @@ def bokchoy_coverage():
     """
     Generate coverage reports for bok-choy tests
     """
+    rename_process()
     parse_coverage(
         Env.BOK_CHOY_REPORT_DIR,
         Env.BOK_CHOY_COVERAGERC
@@ -155,6 +160,7 @@ def a11y_coverage():
     'covered', we are loading that page during the tests but not necessarily
     calling ``page.a11y_audit.check_for_accessibility_errors`` on it.
     """
+    rename_process()
     parse_coverage(
         Env.BOK_CHOY_A11Y_REPORT_DIR,
         Env.BOK_CHOY_A11Y_COVERAGERC

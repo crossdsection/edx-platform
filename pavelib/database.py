@@ -10,6 +10,7 @@ from pavelib.utils.db_utils import (
     fingerprint_bokchoy_db_files, does_fingerprint_on_disk_match, is_fingerprint_in_bucket,
     refresh_bokchoy_db_cache_from_s3, upload_db_cache_to_s3
 )
+from pavelib.utils.process import rename_process
 from pavelib.utils.timer import timed
 
 # Bokchoy db schema and data fixtures
@@ -45,6 +46,7 @@ def update_bokchoy_db_cache():
 
     WARNING: This will take several minutes.
     """
+    rename_process()
     print('Removing cached db files for bokchoy tests')
     remove_files_from_folder(BOKCHOY_DB_FILES, CACHE_FOLDER)
     reset_test_db(BOKCHOY_DB_FILES, update_cache_files=True)
@@ -88,6 +90,7 @@ def update_local_bokchoy_db_from_s3(options):
     to running migrations. The corresponding s3 bucket named for a given
     fingerprint contains the db cache files AFTER applying migrations
     """
+    rename_process()
     fingerprint = fingerprint_bokchoy_db_files(MIGRATION_OUTPUT_FILES, ALL_DB_FILES)
     fingerprints_match = does_fingerprint_on_disk_match(fingerprint)
 

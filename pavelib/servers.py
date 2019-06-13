@@ -11,7 +11,7 @@ from paver.easy import call_task, cmdopts, consume_args, needs, sh, task
 from .assets import collect_assets
 from .utils.cmd import django_cmd
 from .utils.envs import Env
-from .utils.process import run_multi_processes, run_process
+from .utils.process import rename_process, run_multi_processes, run_process
 from .utils.timer import timed
 
 DEFAULT_PORT = {"lms": 8000, "studio": 8001}
@@ -76,6 +76,7 @@ def lms(options):
     """
     Run the LMS server.
     """
+    rename_process()
     settings = getattr(options, 'settings', DEFAULT_SETTINGS)
     asset_settings = getattr(options, 'asset-settings', settings)
     port = getattr(options, 'port', None)
@@ -101,6 +102,7 @@ def studio(options):
     """
     Run the Studio server.
     """
+    rename_process()
     settings = getattr(options, 'settings', DEFAULT_SETTINGS)
     asset_settings = getattr(options, 'asset-settings', settings)
     port = getattr(options, 'port', None)
@@ -121,6 +123,7 @@ def devstack(args):
     """
     Start the devstack lms or studio server
     """
+    rename_process()
     parser = argparse.ArgumentParser(prog='paver devstack')
     parser.add_argument('system', type=str, nargs=1, help="lms or studio")
     parser.add_argument('--fast', action='store_true', default=False, help="Skip updating assets")
@@ -158,6 +161,7 @@ def celery(options):
     """
     Runs Celery workers.
     """
+    rename_process()
     settings = getattr(options, 'settings', 'devstack_with_worker')
     run_process(django_cmd('lms', settings, 'celery', 'worker', '--beat', '--loglevel=INFO', '--pythonpath=.'))
 
@@ -186,6 +190,7 @@ def run_all_servers(options):
     """
     Runs Celery workers, Studio, and LMS.
     """
+    rename_process()
     settings = getattr(options, 'settings', DEFAULT_SETTINGS)
     asset_settings = getattr(options, 'asset_settings', settings)
     worker_settings = getattr(options, 'worker_settings', 'devstack_with_worker')
@@ -251,6 +256,7 @@ def update_db(options):
     """
     Migrates the lms and cms across all databases
     """
+    rename_process()
     settings = getattr(options, 'settings', DEFAULT_SETTINGS)
     fake = "--fake-initial" if getattr(options, 'fake_initial', False) else ""
     for system in ('lms', 'cms'):
@@ -269,6 +275,7 @@ def check_settings(args):
     """
     Checks settings files.
     """
+    rename_process()
     parser = argparse.ArgumentParser(prog='paver check_settings')
     parser.add_argument('system', type=str, nargs=1, help="lms or studio")
     parser.add_argument('settings', type=str, nargs=1, help='Django settings')

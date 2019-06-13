@@ -11,6 +11,7 @@ from paver.easy import cmdopts, needs, sh, task
 
 from pavelib.utils.envs import Env
 from pavelib.utils.passthrough_opts import PassthroughTask
+from pavelib.utils.process import rename_process
 from pavelib.utils.test import suites
 from pavelib.utils.timer import timed
 
@@ -95,6 +96,7 @@ def test_system(options, passthrough_options):
     """
     Run tests on our djangoapps for lms and cms
     """
+    rename_process()
     system = getattr(options, 'system', None)
     test_id = getattr(options, 'test_id', None)
     django_version = getattr(options, 'django_version', None)
@@ -185,6 +187,7 @@ def test_lib(options, passthrough_options):
     """
     Run tests for common/lib/ and pavelib/ (paver-tests)
     """
+    rename_process()
     lib = getattr(options, 'lib', None)
     test_id = getattr(options, 'test_id', lib)
     django_version = getattr(options, 'django_version', None)
@@ -263,6 +266,7 @@ def test_python(options, passthrough_options):
     """
     Run all python tests
     """
+    rename_process()
     python_suite = suites.PythonTestSuite(
         'Python Tests',
         passthrough_options=passthrough_options,
@@ -291,6 +295,7 @@ def test(options, passthrough_options):
     """
     Run all tests
     """
+    rename_process()
     # Subsuites to be added to the main suite
     python_suite = suites.PythonTestSuite(
         'Python Tests',
@@ -314,6 +319,7 @@ def coverage():
     """
     Build the html, xml, and diff coverage reports
     """
+    rename_process()
     report_dir = Env.REPORT_DIR
     rcfile = Env.PYTHON_COVERAGERC
 
@@ -351,6 +357,7 @@ def diff_coverage(options):
     """
     Build the diff coverage reports
     """
+    rename_process()
     compare_branch = options.get('compare_branch', 'origin/master')
 
     # Find all coverage XML files (both Python and JavaScript)

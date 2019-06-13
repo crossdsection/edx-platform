@@ -18,6 +18,7 @@ from paver.easy import BuildFailure, cmdopts, needs, sh, task
 from openedx.core.djangolib.markup import HTML
 
 from .utils.envs import Env
+from .utils.process import rename_process
 from .utils.timer import timed
 
 ALL_SYSTEMS = 'lms,cms,common,openedx,pavelib'
@@ -89,6 +90,7 @@ def find_fixme(options):
     """
     Run pylint on system code, only looking for fixme items.
     """
+    rename_process()
     num_fixme = 0
     systems = getattr(options, 'system', ALL_SYSTEMS).split(',')
 
@@ -172,6 +174,7 @@ def run_pylint(options):
     Run pylint on system code. When violations limit is passed in,
     fail the task if too many violations are found.
     """
+    rename_process()
     lower_violations_limit, upper_violations_limit, errors, systems = _parse_pylint_options(options)
     errors = getattr(options, 'errors', False)
     systems = getattr(options, 'system', ALL_SYSTEMS).split(',')
@@ -293,6 +296,7 @@ def run_pep8(options):  # pylint: disable=unused-argument
     Run pycodestyle on system code.
     Fail the task if any violations are found.
     """
+    rename_process()
     (count, violations_list) = _get_pep8_violations()
     violations_list = ''.join(violations_list)
 
@@ -323,6 +327,7 @@ def run_complexity():
     Uses radon to examine cyclomatic complexity.
     For additional details on radon, see https://radon.readthedocs.org/
     """
+    rename_process()
     system_string = '/ '.join(ALL_SYSTEMS.split(',')) + '/'
     complexity_report_dir = (Env.REPORT_DIR / "complexity")
     complexity_report = complexity_report_dir / "python_complexity.log"
@@ -364,7 +369,7 @@ def run_eslint(options):
     Runs eslint on static asset directories.
     If limit option is passed, fails build if more violations than the limit are found.
     """
-
+    rename_process()
     eslint_report_dir = (Env.REPORT_DIR / "eslint")
     eslint_report = eslint_report_dir / "eslint.report"
     _prepare_report_dir(eslint_report_dir)
@@ -442,6 +447,7 @@ def run_stylelint(options):
     Runs stylelint on Sass files.
     If limit option is passed, fails build if more violations than the limit are found.
     """
+    rename_process()
     violations_limit = int(getattr(options, 'limit', -1))
     num_violations = _get_stylelint_violations()
 
@@ -471,7 +477,7 @@ def run_xsslint(options):
     """
     Runs xsslint/xss_linter.py on the codebase
     """
-
+    rename_process()
     thresholds_option = getattr(options, 'thresholds', '{}')
     try:
         violation_thresholds = json.loads(thresholds_option)
@@ -579,6 +585,7 @@ def run_xsscommitlint():
     """
     Runs xss-commit-linter.sh on the current branch.
     """
+    rename_process()
     xsscommitlint_script = "xss-commit-linter.sh"
     xsscommitlint_report_dir = (Env.REPORT_DIR / "xsscommitlint")
     xsscommitlint_report = xsscommitlint_report_dir / "xsscommitlint.report"
@@ -793,6 +800,7 @@ def run_pii_check(options):
     """
     Guarantee that all Django models are PII-annotated.
     """
+    rename_process()
     pii_report_name = 'pii'
     default_report_dir = (Env.REPORT_DIR / pii_report_name)
     report_dir = getattr(options, 'report_dir', default_report_dir)
@@ -843,6 +851,7 @@ def run_quality(options):
         below this percentage. For example, if p is set to 80, and diff-quality finds
         quality of the branch vs the compare branch is less than 80%, then this task will fail.
     """
+    rename_process()
     # Directory to put the diff reports in.
     # This makes the folder if it doesn't already exist.
     dquality_dir = (Env.REPORT_DIR / "diff_quality").makedirs_p()

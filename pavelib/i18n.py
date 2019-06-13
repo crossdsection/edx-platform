@@ -12,6 +12,7 @@ from paver.easy import cmdopts, needs, sh, task
 
 from .utils.cmd import django_cmd
 from .utils.envs import Env
+from .utils.process import rename_process
 from .utils.timer import timed
 
 try:
@@ -35,6 +36,7 @@ def i18n_extract(options):
     """
     Extract localizable strings from sources
     """
+    rename_process()
     verbose = getattr(options, "verbose", None)
     cmd = "i18n_tool extract"
 
@@ -50,6 +52,7 @@ def i18n_fastgenerate():
     """
     Compile localizable strings from sources without re-extracting strings first.
     """
+    rename_process()
     sh("i18n_tool generate")
 
 
@@ -60,6 +63,7 @@ def i18n_generate():
     """
     Compile localizable strings from sources, extracting strings first.
     """
+    rename_process()
     sh("i18n_tool generate")
 
 
@@ -71,6 +75,7 @@ def i18n_generate_strict():
     Compile localizable strings from sources, extracting strings first.
     Complains if files are missing.
     """
+    rename_process()
     sh("i18n_tool generate --strict")
 
 
@@ -85,6 +90,7 @@ def i18n_dummy(options):
     Simulate international translation by generating dummy strings
     corresponding to source strings.
     """
+    rename_process()
     settings = options.get('settings', DEFAULT_SETTINGS)
 
     sh("i18n_tool dummy")
@@ -102,7 +108,7 @@ def i18n_validate_gettext():
     """
     Make sure GNU gettext utilities are available
     """
-
+    rename_process()
     returncode = subprocess.call(['which', 'xgettext'])
 
     if returncode != 0:
@@ -125,6 +131,7 @@ def i18n_validate_transifex_config():
     """
     Make sure config file with username/password exists
     """
+    rename_process()
     home = path('~').expanduser()
     config = home / '.transifexrc'
 
@@ -149,6 +156,7 @@ def i18n_transifex_push():
     """
     Push source strings to Transifex for translation
     """
+    rename_process()
     sh("i18n_tool transifex push")
 
 
@@ -159,6 +167,7 @@ def i18n_transifex_pull():
     """
     Pull translated strings from Transifex
     """
+    rename_process()
     sh("i18n_tool transifex pull")
 
 
@@ -168,6 +177,7 @@ def i18n_rtl():
     """
     Pull all RTL translations (reviewed AND unreviewed) from Transifex
     """
+    rename_process()
     sh("i18n_tool transifex rtl")
 
     print("Now generating langugage files...")
@@ -186,6 +196,7 @@ def i18n_ltr():
     """
     Pull all LTR translations (reviewed AND unreviewed) from Transifex
     """
+    rename_process()
     sh("i18n_tool transifex ltr")
 
     print("Now generating langugage files...")
@@ -211,7 +222,7 @@ def i18n_robot_pull():
     """
     Pull source strings, generate po and mo files, and validate
     """
-
+    rename_process()
     # sh('paver test_i18n')
     # Tests were removed from repo, but there should still be tests covering the translations
     # TODO: Validate the recently pulled translations, and give a bail option
@@ -239,6 +250,7 @@ def i18n_clean():
     """
     Clean the i18n directory of artifacts
     """
+    rename_process()
     sh('git clean -fdX conf/locale')
 
 
@@ -266,6 +278,7 @@ def i18n_release_push():
     """
     Push release-specific resources to Transifex.
     """
+    rename_process()
     resources = find_release_resources()
     sh("i18n_tool transifex push " + " ".join(resources))
 
@@ -279,6 +292,7 @@ def i18n_release_pull():
     """
     Pull release-specific translations from Transifex.
     """
+    rename_process()
     resources = find_release_resources()
     sh("i18n_tool transifex pull " + " ".join(resources))
 
