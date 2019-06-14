@@ -2041,19 +2041,18 @@ def update_expiry_email_date(sender, instance, **kwargs):  # pylint: disable=unu
     verification then send email to get the ID verified by setting the
     expiry_email_date field.
     """
-    resend_days = settings.VERIFICATION_EXPIRY_EMAIL['RESEND_DAYS']
-    delta_days = settings.VERIFICATION_EXPIRY_EMAIL['DAYS_RANGE']
+    email_attr = getattr(settings, 'VERIFICATION_EXPIRY_EMAIL', {'DAYS_RANGE': 1, 'RESEND_DAYS': 15})
 
     if instance.mode == 'verified':
         today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        recently_expired_date = today - timedelta(days=delta_days)
+        recently_expired_date = today - timedelta(days=email_attr['DAYS_RANGE'])
 
         try:
             verification = SoftwareSecurePhotoVerification.objects.filter(
                 status='approved', user_id=instance.user_id).latest('updated_at')
 
             if verification.expiry_date < recently_expired_date and not verification.expiry_email_date:
-                expiry_email_date = today - timedelta(days=resend_days)
+                expiry_email_date = today - timedelta(days=email_attr['RESEND_DAYS'])
                 SoftwareSecurePhotoVerification.objects.filter(pk=verification.pk).update(
                     expiry_email_date=expiry_email_date)
         except SoftwareSecurePhotoVerification.DoesNotExist:
