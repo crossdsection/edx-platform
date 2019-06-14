@@ -70,7 +70,7 @@ from openedx.core.djangolib.js_utils import js_escaped_string
 
       $('#login-form').on('ajax:success', function(event, json, xhr) {
         if(json.success) {
-          var nextUrl = "${login_redirect_url | n, js_escaped_string}";
+          var nextUrl = "${login_redirect_url | n}"; // xss-lint: disable=mako-invalid-js-filter
           if (json.redirect_url) {
             nextUrl = json.redirect_url; // Most likely third party auth completion. This trumps 'nextUrl' above.
           }
@@ -217,7 +217,8 @@ from openedx.core.djangolib.js_utils import js_escaped_string
 
     % for enabled in provider.Registry.displayed_for_login():
       ## Translators: provider_name is the name of an external, third-party user authentication provider (like Google or LinkedIn).
-      <button type="submit" class="button button-primary button-${enabled.provider_id} login-${enabled.provider_id}" onclick="thirdPartySignin(event, '${pipeline_url[enabled.provider_id]}');">
+        ## xss-lint: disable=mako-invalid-html-filter
+      <button type="submit" class="button button-primary button-${enabled.provider_id} login-${enabled.provider_id}" onclick="thirdPartySignin(event, '${pipeline_url[enabled.provider_id]|n}');">
         % if enabled.icon_class:
         <span class="icon fa ${enabled.icon_class}" aria-hidden="true"></span>
         % else:
