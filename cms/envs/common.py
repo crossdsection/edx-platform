@@ -46,9 +46,9 @@ import os
 import sys
 from datetime import timedelta
 
-import lms.envs.common
+import lms.envs.base
 # Although this module itself may not use these imported variables, other dependent modules may.
-from lms.envs.common import (
+from lms.envs.base import (
     USE_TZ, TECH_SUPPORT_EMAIL, PLATFORM_NAME, PLATFORM_DESCRIPTION, BUGS_EMAIL, DOC_STORE_CONFIG, DATA_DIR,
     ALL_LANGUAGES, WIKI_ENABLED, update_module_store_settings, ASSET_IGNORE_REGEX,
     PARENTAL_CONSENT_AGE_LIMIT, REGISTRATION_EMAIL_PATTERNS_ALLOWED,
@@ -176,7 +176,7 @@ FEATURES = {
     'GITHUB_PUSH': False,
 
     # for consistency in user-experience, keep the value of the following 3 settings
-    # in sync with the ones in lms/envs/common.py
+    # in sync with the ones in lms/envs/base.py
     'ENABLE_DISCUSSION_SERVICE': True,
     'ENABLE_TEXTBOOK': True,
 
@@ -235,7 +235,7 @@ FEATURES = {
 
     # let students save and manage their annotations
     # for consistency in user-experience, keep the value of this feature flag
-    # in sync with the one in lms/envs/common.py
+    # in sync with the one in lms/envs/base.py
     'ENABLE_EDXNOTES': False,
 
     # Show a new field in "Advanced settings" that can store custom data about a
@@ -295,7 +295,7 @@ FEATURES = {
 
     # At edX it's safe to assume that English transcripts are always available
     # This is not the case for all installations.
-    # The default value in {lms,cms}/envs/common.py and xmodule/tests/test_video.py should be consistent.
+    # The default value in {lms,cms}/envs/base.py and xmodule/tests/test_video.py should be consistent.
     'FALLBACK_TO_ENGLISH_TRANSCRIPTS': True,
 
     # Set this to False to facilitate cleaning up invalid xml from your modulestore.
@@ -329,7 +329,7 @@ ENABLE_JASMINE = False
 
 ############################# SOCIAL MEDIA SHARING #############################
 SOCIAL_SHARING_SETTINGS = {
-    # Note: Ensure 'CUSTOM_COURSE_URLS' has a matching value in lms/envs/common.py
+    # Note: Ensure 'CUSTOM_COURSE_URLS' has a matching value in lms/envs/base.py
     'CUSTOM_COURSE_URLS': False
 }
 
@@ -415,7 +415,7 @@ TEMPLATES = [
         'NAME': 'preview',
         'BACKEND': 'edxmako.backend.Mako',
         'APP_DIRS': False,
-        'DIRS': lms.envs.common.MAKO_TEMPLATE_DIRS_BASE,
+        'DIRS': lms.envs.base.MAKO_TEMPLATE_DIRS_BASE,
         'OPTIONS': {
             'context_processors': CONTEXT_PROCESSORS,
             'debug': False,
@@ -455,7 +455,7 @@ IDA_LOGOUT_URI_LIST = []
 
 # These are standard regexes for pulling out info like course_ids, usage_ids, etc.
 # They are used so that URLs with deprecated-format strings still work.
-from lms.envs.common import (
+from lms.envs.base import (
     COURSE_KEY_PATTERN, COURSE_KEY_REGEX, COURSE_ID_PATTERN, USAGE_KEY_PATTERN, ASSET_KEY_PATTERN
 )
 
@@ -682,11 +682,11 @@ STATICFILES_DIRS = [
 CELERY_TIMEZONE = 'UTC'
 TIME_ZONE = 'America/New_York'  # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 LANGUAGE_CODE = 'en'  # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGES_BIDI = lms.envs.common.LANGUAGES_BIDI
+LANGUAGES_BIDI = lms.envs.base.LANGUAGES_BIDI
 
-LANGUAGE_COOKIE = lms.envs.common.LANGUAGE_COOKIE
+LANGUAGE_COOKIE = lms.envs.base.LANGUAGE_COOKIE
 
-LANGUAGES = lms.envs.common.LANGUAGES
+LANGUAGES = lms.envs.base.LANGUAGES
 LANGUAGE_DICT = dict(LANGUAGES)
 
 USE_I18N = True

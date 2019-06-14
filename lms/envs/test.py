@@ -16,7 +16,7 @@ from collections import OrderedDict
 
 from django.utils.translation import ugettext_lazy
 
-from .common import *
+from .base import *
 import os
 from path import Path as path
 from uuid import uuid4

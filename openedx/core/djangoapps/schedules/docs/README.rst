@@ -165,7 +165,7 @@ to the local filesystem, which can be useful for debugging.
 File Back-end
 ~~~~~~~~~~~~~
 
-Edit the ``lms/envs/common.py`` or ``lms/envs/private.py``\ and
+Edit the ``lms/envs/base.py`` or ``lms/envs/private.py``\ and
 add/change the following:
 
 .. code:: python
@@ -187,7 +187,7 @@ To configure ACE to send emails to users’ email addresses, add a
 documentation <https://edx-ace.readthedocs.io/en/latest/getting_started.html#sailthruemailchannel-settings>`__
 for instructions on setting up a Sailthru API key and secret.
 
-Make sure to add the following settings in either ``lms/envs/common.py``
+Make sure to add the following settings in either ``lms/envs/base.py``
 or ``lms/envs/private.py``:
 
 .. code:: python
@@ -203,7 +203,7 @@ Django Settings
 These settings populate links in the emails to external
 social media, marketing websites, app stores, etc.
 
-Edit the ``lms/envs/common.py`` or ``lms/envs/private.py`` and
+Edit the ``lms/envs/base.py`` or ``lms/envs/private.py`` and
 add/change the following:
 
 .. code:: python

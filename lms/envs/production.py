@@ -30,7 +30,7 @@ from xmodule.modulestore.modulestore_settings import convert_module_store_settin
 from openedx.core.djangoapps.plugins import plugin_settings, constants as plugin_constants
 from django.core.exceptions import ImproperlyConfigured
 
-from .common import *
+from .base import *
 from openedx.core.lib.derived import derive_settings  # pylint: disable=wrong-import-order
 from openedx.core.lib.logsettings import get_logger_config  # pylint: disable=wrong-import-order
 
@@ -558,7 +558,7 @@ for name, database in DATABASES.items():
 XQUEUE_INTERFACE = AUTH_TOKENS['XQUEUE_INTERFACE']
 
 # Get the MODULESTORE from auth.json, but if it doesn't exist,
-# use the one from common.py
+# use the one from base.py
 MODULESTORE = convert_module_store_setting_if_needed(AUTH_TOKENS.get('MODULESTORE', MODULESTORE))
 CONTENTSTORE = AUTH_TOKENS.get('CONTENTSTORE', CONTENTSTORE)
 DOC_STORE_CONFIG = AUTH_TOKENS.get('DOC_STORE_CONFIG', DOC_STORE_CONFIG)
@@ -720,7 +720,7 @@ if FEATURES.get('ENABLE_OAUTH2_PROVIDER'):
     OAUTH_OIDC_ISSUER = ENV_TOKENS['OAUTH_OIDC_ISSUER']
     OAUTH_ENFORCE_SECURE = ENV_TOKENS.get('OAUTH_ENFORCE_SECURE', True)
     OAUTH_ENFORCE_CLIENT_SECURE = ENV_TOKENS.get('OAUTH_ENFORCE_CLIENT_SECURE', True)
-    # Defaults for the following are defined in lms.envs.common
+    # Defaults for the following are defined in lms.envs.base
     OAUTH_EXPIRE_DELTA = datetime.timedelta(
         days=ENV_TOKENS.get('OAUTH_EXPIRE_CONFIDENTIAL_CLIENT_DAYS', OAUTH_EXPIRE_CONFIDENTIAL_CLIENT_DAYS)
     )
@@ -877,7 +877,7 @@ if FEATURES.get('ENABLE_LTI_PROVIDER'):
 
 LTI_USER_EMAIL_DOMAIN = ENV_TOKENS.get('LTI_USER_EMAIL_DOMAIN', 'lti.example.com')
 
-# For more info on this, see the notes in common.py
+# For more info on this, see the notes in base.py
 LTI_AGGREGATE_SCORE_PASSBACK_DELAY = ENV_TOKENS.get(
     'LTI_AGGREGATE_SCORE_PASSBACK_DELAY', LTI_AGGREGATE_SCORE_PASSBACK_DELAY
 )
@@ -988,7 +988,7 @@ ENTERPRISE_CUSTOMER_CATALOG_DEFAULT_CONTENT_FILTER = ENV_TOKENS.get(
 ############## ENTERPRISE SERVICE API CLIENT CONFIGURATION ######################
 # The LMS communicates with the Enterprise service via the EdxRestApiClient class
 # The below environmental settings are utilized by the LMS when interacting with
-# the service, and override the default parameters which are defined in common.py
+# the service, and override the default parameters which are defined in base.py
 
 DEFAULT_ENTERPRISE_API_URL = None
 if LMS_INTERNAL_ROOT_URL is not None:
@@ -1012,7 +1012,7 @@ ENTERPRISE_API_CACHE_TIMEOUT = ENV_TOKENS.get(
 ############## ENTERPRISE SERVICE LMS CONFIGURATION ##################################
 # The LMS has some features embedded that are related to the Enterprise service, but
 # which are not provided by the Enterprise service. These settings override the
-# base values for the parameters as defined in common.py
+# base values for the parameters as defined in base.py
 
 ENTERPRISE_PLATFORM_WELCOME_TEMPLATE = ENV_TOKENS.get(
     'ENTERPRISE_PLATFORM_WELCOME_TEMPLATE',
@@ -1044,7 +1044,7 @@ SYSTEM_TO_FEATURE_ROLE_MAPPING = ENV_TOKENS.get(
 ############## CATALOG/DISCOVERY SERVICE API CLIENT CONFIGURATION ######################
 # The LMS communicates with the Catalog service via the EdxRestApiClient class
 # The below environmental settings are utilized by the LMS when interacting with
-# the service, and override the default parameters which are defined in common.py
+# the service, and override the default parameters which are defined in base.py
 
 COURSES_API_CACHE_TIMEOUT = ENV_TOKENS.get('COURSES_API_CACHE_TIMEOUT', COURSES_API_CACHE_TIMEOUT)
 

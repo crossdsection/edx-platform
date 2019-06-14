@@ -177,7 +177,7 @@ class RegistrationValidationViewTests(test_utils.ApiTestCase):
         )
 
     def test_password_empty_validation_decision(self):
-        # 2 is the default setting for minimum length found in lms/envs/common.py
+        # 2 is the default setting for minimum length found in lms/envs/base.py
         # under AUTH_PASSWORD_VALIDATORS.MinimumLengthValidator
         msg = u'This password is too short. It must contain at least 2 characters.'
         self.assertValidationDecision(
@@ -187,7 +187,7 @@ class RegistrationValidationViewTests(test_utils.ApiTestCase):
 
     def test_password_bad_min_length_validation_decision(self):
         password = 'p'
-        # 2 is the default setting for minimum length found in lms/envs/common.py
+        # 2 is the default setting for minimum length found in lms/envs/base.py
         # under AUTH_PASSWORD_VALIDATORS.MinimumLengthValidator
         msg = u'This password is too short. It must contain at least 2 characters.'
         self.assertValidationDecision(
@@ -197,7 +197,7 @@ class RegistrationValidationViewTests(test_utils.ApiTestCase):
 
     def test_password_bad_max_length_validation_decision(self):
         password = 'p' * DEFAULT_MAX_PASSWORD_LENGTH
-        # 75 is the default setting for maximum length found in lms/envs/common.py
+        # 75 is the default setting for maximum length found in lms/envs/base.py
         # under AUTH_PASSWORD_VALIDATORS.MaximumLengthValidator
         msg = u'This password is too long. It must contain no more than 75 characters.'
         self.assertValidationDecision(
