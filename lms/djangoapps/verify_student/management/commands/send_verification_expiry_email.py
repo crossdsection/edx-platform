@@ -49,7 +49,7 @@ class Command(BaseCommand):
     delay between batches is indicated by `sleep_time`.For each batch a celery task is initiated that sends the email
 
     Example usage:
-        $ ./manage.py lms send_verification_expiry_email --resend-days=30 --batch-size=2000 --sleep-time=5
+        $ ./manage.py lms send_verification_expiry_email --batch-size=2000 --sleep-time=5
     OR
         $ ./manage.py lms send_verification_expiry_email
 
@@ -81,8 +81,7 @@ class Command(BaseCommand):
         It creates batches of expired Software Secure Photo Verification and sends it to send_verification_expiry_email
         that used edx_ace to send email to these learners
         """
-        # pylint: disable=attribute-defined-outside-init
-        self.resend_days = settings.VERIFICATION_EXPIRY_EMAIL['RESEND_DAYS']
+        resend_days = settings.VERIFICATION_EXPIRY_EMAIL['RESEND_DAYS']
         days = settings.VERIFICATION_EXPIRY_EMAIL['DAYS_RANGE']
         batch_size = options['batch_size']
         sleep_time = options['sleep_time']
@@ -90,7 +89,7 @@ class Command(BaseCommand):
 
         end_date = now().replace(hour=0, minute=0, second=0, microsecond=0)
         # If email was sent and user did not re-verify then this date will be used as the criteria for resending email
-        date_resend_days_ago = end_date - timedelta(days=self.resend_days)
+        date_resend_days_ago = end_date - timedelta(days=resend_days)
 
         start_date = end_date - timedelta(days=days)
 
@@ -113,27 +112,32 @@ class Command(BaseCommand):
                     .format(start_date.date(), now().date(), total_verification))
 
         batch_verifications = []
+        email_config = {
+            'resend_days': resend_days,
+            'dry_run': dry_run,
+            'default_emails': settings.VERIFICATION_EXPIRY_EMAIL['DEFAULT_EMAILS']
+        }
 
         for verification in sspv:
             if not verification.expiry_email_date or verification.expiry_email_date <= date_resend_days_ago:
                 batch_verifications.append(verification)
 
                 if len(batch_verifications) == batch_size:
-                    self.send_verification_expiry_email(batch_verifications, dry_run)
+                    self.send_verification_expiry_email(batch_verifications, email_config)
                     time.sleep(sleep_time)
                     batch_verifications = []
 
         # If selected verification in batch are less than batch_size
         if batch_verifications:
-            self.send_verification_expiry_email(batch_verifications, dry_run)
+            self.send_verification_expiry_email(batch_verifications, email_config)
 
-    def send_verification_expiry_email(self, batch_verifications, dry_run=False):
+    def send_verification_expiry_email(self, batch_verifications, config):
         """
-        Spins a task to send verification expiry email to the learners in the batch using edx_ace
+        Sends verification expiry email to the learners in the batch using edx_ace
         If the email is successfully sent change the expiry_email_date to reflect when the
         email was sent
         """
-        if dry_run:
+        if config['dry_run']:
             logger.info(
                 u"This was a dry run, no email was sent. For the actual run email would have been sent "
                 u"to {} learner(s)".format(len(batch_verifications))
@@ -162,9 +166,9 @@ class Command(BaseCommand):
                     }
                 )
                 ace.send(msg)
-                self._set_email_expiry_date(verification, user)
+                self._set_email_expiry_date(verification, user, config)
 
-    def _set_email_expiry_date(self, verification, user):
+    def _set_email_expiry_date(self, verification, user, config):
         """
         If already DEFAULT Number of emails are sent, then verify that user is enrolled in at least
         one verified course run for which the course has not ended else stop sending emails
@@ -172,9 +176,10 @@ class Command(BaseCommand):
         Setting email_expiry_date to None will prevent from sending any emails in future to the learner
         """
         send_expiry_email_again = True
-        no_of_emails_sent = (now() - verification.expiry_date).days / self.resend_days
+        email_duration = config['resend_days'] * (config['default_emails'] - 1)
+        days_since_expiry = (now() - verification.expiry_date).days
 
-        if not no_of_emails_sent < settings.VERIFICATION_EXPIRY_EMAIL['DEFAULT_EMAILS']:
+        if days_since_expiry >= email_duration:
             send_expiry_email_again = False
 
             enrollments = CourseEnrollment.enrollments_for_user(user=user)
