@@ -26,7 +26,7 @@ Longer TODO:
 # Pylint gets confused by path.py instances, which report themselves as class
 # objects. As a result, pylint applies the wrong regex in validating names,
 # and throws spurious errors. Therefore, we disable invalid-name checking.
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name, wrong-import-position
 
 import imp
 import sys

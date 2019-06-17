@@ -149,7 +149,7 @@ from lms.envs.base import (
     # Methods to derive settings
     _make_mako_template_dirs,
     _make_locale_paths,
-)
+)  # pylint: disable=wrong-import-position
 from path import Path as path
 from django.core.urlresolvers import reverse_lazy
 
